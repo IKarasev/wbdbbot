@@ -1,7 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, Flask, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+
 from models.User import User
-from flask_login import login_user, logout_user, current_user, login_required
-from flask import Flask, request, render_template, redirect, url_for, redirect
 
 auth = Blueprint("auth routes", __name__)
 
@@ -12,7 +12,9 @@ def login():
         return render_template("auth.html")
     form = request.form
     username, password = form.get("username", ""), form.get("password", "")
-    if not (username and password):
+    # TODO add password lenth check 
+    
+    if not (username and password) or len(password):
         return render_template("auth.html", error="Auth failed")
     user = User.auth(username, password)
     if not user:
@@ -31,6 +33,9 @@ def register():
         form.get("password", ""),
         form.get("preferences", ""),
     )
+    # TODO check pass
+    if len(password) < 5:
+        return(render_template("register.html", error="Something went wrong"))
     if not (username and password and preferences):
         return render_template("register.html", error="All fields are required")
     user = User.get_by_username(username)

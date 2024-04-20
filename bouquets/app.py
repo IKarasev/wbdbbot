@@ -1,17 +1,19 @@
 from flask import Flask
+from flask_login import LoginManager
+
 from blueprints.auth import auth as AuthBp
-from models.User import User
 from blueprints.bouquet import bouquet as BouquetBp
 from blueprints.profile import profile as ProfileBp
-from flask_login import LoginManager
 from db import init_db
 from helpers import crypto_helper
+from models.User import User
 
 app = Flask(__name__)
 app.register_blueprint(AuthBp)
 app.register_blueprint(BouquetBp)
 app.register_blueprint(ProfileBp)
-app.config["SECRET_KEY"] = "very_secret"
+# TODO CHANGE PASSWORD
+app.config["SECRET_KEY"] = "VerySr0ngS3cr3tK3y"
 app.config["UUID"] = crypto_helper.generate_rnd_string(32)
 
 init_db()

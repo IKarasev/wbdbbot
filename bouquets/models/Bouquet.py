@@ -1,5 +1,7 @@
-from db import connection_manager
 from sqlite3 import DatabaseError
+
+from db import connection_manager
+
 from .Flower import Flower
 
 
@@ -37,9 +39,10 @@ class Bouquet:
 
     @staticmethod
     def filter_bouquets(filter, value, username):
-        query = f"SELECT id, name, owner, cost, description, sent_to FROM bouquet WHERE owner = ? AND {filter} = ?"
+        # TODO SQL Injection
+        query = f"SELECT id, name, owner, cost, description, sent_to FROM bouquet WHERE owner = ? AND ? = ?"
         print(query)
-        res = connection_manager(query, username, value)
+        res = connection_manager(query, username, filter, value)
         if not res:
             return
         return [Bouquet.get_bouquet(row) for row in res]
